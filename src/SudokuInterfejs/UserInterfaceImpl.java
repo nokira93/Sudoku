@@ -1,10 +1,17 @@
 package SudokuInterfejs;
 
+import SudokuPlansza.Coordinate;
+import SudokuPlansza.SudokuGame;
 import com.sun.corba.se.pept.transport.Acceptor;
 import com.sun.corba.se.pept.transport.Connection;
 import com.sun.corba.se.pept.transport.EventHandler;
 import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import com.sun.xml.internal.bind.v2.runtime.Coordinator;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -16,9 +23,9 @@ public class UserInterfaceImpl implements IUserInterfaceContract.Viev,
         EventHandler<KeyEvent> {
 
     private final Stage stage;
-    private final Gropu root;
+    private final Group root;
 
-    private HashMap<Coordinates, SudokuTextField> textFieldCoordinates;
+    private HashMap<Coordinate, SudokuTextField> textFieldCoordinates;
 
     private IUserInterfaceContract.EventListener listener;
     private  static final double Window_X= 668;
@@ -46,12 +53,12 @@ public class UserInterfaceImpl implements IUserInterfaceContract.Viev,
         stage.show();
     }
 
-    private void drawGridLines(Gropu root) {
+    private void drawGridLines(Group root) {
         int xAndY =114;
         int index = 0;
         while (index < 8){
             int thickness;
-            if (index == 2 || 5){
+            if (index == 2 || index == 5) {
                 thickness = 3;
             } else {
                 thickness =2;
@@ -62,8 +69,20 @@ public class UserInterfaceImpl implements IUserInterfaceContract.Viev,
                     BoardPadding,
                     Board_X_and_Y,
                     thickness
+            );
 
-            )
+            Rectangle horizontalLine= getLine(
+                    BoardPadding,
+                    xAndY +64 * index,
+                    thickness,
+                    Board_X_and_Y
+            );
+
+            root.getChildren().addAll(
+                    verticalLine,
+                    horizontalLine
+            );
+            index++;
         }
     }
 
@@ -72,24 +91,44 @@ public class UserInterfaceImpl implements IUserInterfaceContract.Viev,
 
         line.setX(x);
         line.setY(y);
-        line.setHight(height);
+        line.setHeight(height);
         line.setWidth(width);
-
         line.setFill(Color.BLACK);
         return null;
     }
 
-    private void drawTextFields(Gropu root) {
+    private void drawTextFields(Group root) {
+        final int xOrigin = 50;
+        final int yOrigin = 50;
+
+        final int xAndYDelta = 64;
+        for( int xIndex = 0; xIndex <9; xIndex++){
+            for(int yIndex = 0; yIndex <9; yIndex++){
+                int x= xOrigin + xIndex * xAndYDelta;
+                int y= yOrigin + yIndex * xAndYDelta;
+
+                SudokuTextField title= new SudokuTextField(xIndex, yIndex);
+                styleSudokuTitle(title, x, y);
+            }
+        }
     }
 
-    private void drawSudokuBoard(Gropu root) {
+    private void styleSudokuTitle(SudokuTextField title, double x, double y) {
+        Font numberFont= new Font(32);
+
+        title.setFont(numberFont);
+        title.setAlignment(Pos.CENTER);
+
     }
 
-    private void drawTitle(Gropu root) {
+    private void drawSudokuBoard(Group root) {
+    }
+
+    private void drawTitle(Group root) {
         
     }
 
-    private void drawBackground(Gropu root) {
+    private void drawBackground(Group root) {
         
     }
 
